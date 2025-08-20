@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slope and Intercept Visualizer</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; }
+        .container { max-width: 500px; margin: auto; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 2px 8px #0001; }
+        label { display: block; margin-top: 12px; }
+        input[type="number"] { width: 100px; margin-right: 12px; }
+        button { margin-top: 16px; padding: 8px 16px; }
+        canvas { display: block; margin: 32px auto 0 auto; background: #fff; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Slope and Intercept Visualizer</h2>
+        <label>Slope (m): <input type="number" id="slope" value="1" step="any"></label>
+        <label>Intercept (b): <input type="number" id="intercept" value="0" step="any"></label>
+        <button onclick="plotLine()">Plot Line</button>
+        <canvas id="graph" width="400" height="400"></canvas>
+    </div>
+    <script>
+        function plotLine() {
+            const m = parseFloat(document.getElementById('slope').value);
+            const b = parseFloat(document.getElementById('intercept').value);
+            const canvas = document.getElementById('graph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw axes
+            ctx.strokeStyle = '#888';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, 200); ctx.lineTo(400, 200); // x-axis
+            ctx.moveTo(200, 0); ctx.lineTo(200, 400); // y-axis
+            ctx.stroke();
+
+            // Draw ticks
+            for (let i = 0; i <= 400; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(i, 195); ctx.lineTo(i, 205); // x-ticks
+                ctx.moveTo(195, i); ctx.lineTo(205, i); // y-ticks
+                ctx.stroke();
+            }
+
+            // Draw the line y = mx + b
+            ctx.strokeStyle = '#0074D9';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            // Map x from -5 to 5
+            for (let px = 0; px <= 400; px++) {
+                let x = (px - 200) / 40; // scale: 40px = 1 unit
+                let y = m * x + b;
+                let py = 200 - y * 40;
+                if (px === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+        }
+        // Initial plot
+        plotLine();
+    </script>
+</body>
+</html>
